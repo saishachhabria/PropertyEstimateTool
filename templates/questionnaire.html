@@ -138,19 +138,17 @@
 
 function updateButtons() {
     const responseInput = document.getElementById('responseInput');
-    const sendButton = document.getElementById('sendButton');
     const continueButton = document.getElementById('continueButton');
     const hasContent = responseInput.value.trim().length > 0;
     
-    sendButton.disabled = !hasContent;
     continueButton.disabled = !hasContent;
     
     if (hasContent) {
-        sendButton.classList.remove('opacity-30');
-        sendButton.classList.add('opacity-100');
+        continueButton.classList.remove('opacity-30');
+        continueButton.classList.add('opacity-100');
     } else {
-        sendButton.classList.add('opacity-30');
-        sendButton.classList.remove('opacity-100');
+        continueButton.classList.add('opacity-30');
+        continueButton.classList.remove('opacity-100');
     }
 }
 

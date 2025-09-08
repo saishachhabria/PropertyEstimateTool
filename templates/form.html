@@ -202,41 +202,45 @@ document.addEventListener('DOMContentLoaded', function() {
     const submitText = document.getElementById('submitText');
     const submitSpinner = document.getElementById('submitSpinner');
     
-    form.addEventListener('submit', function(e) {
-    
-        submitBtn.disabled = true;
-        submitText.classList.add('hidden');
-        submitSpinner.classList.remove('hidden');
-        
-        setTimeout(() => {
-            if (submitBtn.disabled) {
-                submitSpinner.classList.add('hidden');
-                submitText.textContent = 'Analyzing your property...';
-                submitText.classList.remove('hidden');
-            }
-        }, 2000);
-    });
+    if (form && submitBtn) {
+        form.addEventListener('submit', function(e) {
+            submitBtn.disabled = true;
+            submitText.classList.add('hidden');
+            submitSpinner.classList.remove('hidden');
+            
+            setTimeout(() => {
+                if (submitBtn.disabled) {
+                    submitSpinner.classList.add('hidden');
+                    submitText.textContent = 'Analyzing your property...';
+                    submitText.classList.remove('hidden');
+                }
+            }, 2000);
+        });
     
     // Client-side validation
     const addressField = document.getElementById('{{ form.address.id_for_label }}');
     const lotSizeField = document.getElementById('{{ form.lot_size.id_for_label }}');
     
-    addressField.addEventListener('blur', function() {
-        if (this.value.trim().length < 5) {
-            this.classList.add('ring-2', 'ring-red-500', 'bg-red-50');
-        } else {
-            this.classList.remove('ring-red-500', 'bg-red-50');
-        }
-    });
+    if (addressField) {
+        addressField.addEventListener('blur', function() {
+            if (this.value.trim().length < 5) {
+                this.classList.add('ring-2', 'ring-red-500', 'bg-red-50');
+            } else {
+                this.classList.remove('ring-red-500', 'bg-red-50');
+            }
+        });
+    }
     
-    lotSizeField.addEventListener('blur', function() {
-        const value = parseFloat(this.value);
-        if (isNaN(value) || value <= 0) {
-            this.classList.add('ring-2', 'ring-red-500', 'bg-red-50');
-        } else {
-            this.classList.remove('ring-red-500', 'bg-red-50');
-        }
-    });
+    if (lotSizeField) {
+        lotSizeField.addEventListener('blur', function() {
+            const value = parseFloat(this.value);
+            if (isNaN(value) || value <= 0) {
+                this.classList.add('ring-2', 'ring-red-500', 'bg-red-50');
+            } else {
+                this.classList.remove('ring-red-500', 'bg-red-50');
+            }
+        });
+    }
 });
 </script>
 {% endblock %}

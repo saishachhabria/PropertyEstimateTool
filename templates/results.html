@@ -8,12 +8,15 @@
   <div class="container mx-auto px-4 py-8 max-w-4xl">
     
     <!-- Project Header Card -->
-    <div class="bg-white rounded-4xl overflow-hidden shadow-lg mb-6">
+    <div class="bg-white rounded-3xl overflow-hidden shadow-lg mb-6">
       <!-- Hero Image -->
-      <div class="h-56 md:h-72 relative overflow-hidden">
-      <img src="{% static 'images/result_image.png' %}" alt="Farm">
+      <div class="h-56 md:h-72 relative overflow-hidden bg-gradient-to-b from-green-100 to-blue-100">
+        {% if 'images/result_image.png' %}
+          <img src="{% static 'images/result_image.png' %}" alt="Farm" class="w-full h-full object-cover">
+        {% endif %}
         
         <!-- Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
         <div class="absolute bottom-4 left-4 right-4 flex justify-between items-end text-white">
           <div>
             <div class="text-sm font-medium drop-shadow-lg">
@@ -22,11 +25,9 @@
           </div>
           <div class="text-right">
             <span class="text-lg font-bold drop-shadow-lg">
-              {{ estimate.area_hectares|floatformat:0 }}
+              {{ estimate.area_hectares|floatformat:1 }}
             </span>
-            <span class="text-sm drop-shadow-lg">
-              of {{ estimate.area_hectares|floatformat:0 }} ha
-            </span>
+            <span class="text-sm drop-shadow-lg"> hectares</span>
           </div>
         </div>
       </div>
@@ -45,20 +46,24 @@
         Projected 10-Year Cash Flow
       </h2>
 
-      <!-- Tab Navigation -->
-      <div class="flex mb-6 bg-gray-100 rounded-full p-1">
-        <button id="cashFlowTab" 
-                class="tab-button active flex-1 py-3 px-6 text-sm font-semibold rounded-full transition-all">
-          Cash Flow
-        </button>
-        <button id="revenueTab" 
-                class="tab-button flex-1 py-3 px-6 text-sm font-semibold rounded-full transition-all">
-          Revenue  
-        </button>
-        <button id="costTab" 
-                class="tab-button flex-1 py-3 px-6 text-sm font-semibold rounded-full transition-all">
-          Cost
-        </button>
+      <div class="flex justify-center mb-6">
+        <div class="bg-transparent rounded-full p-4 inline-flex max-w-md">
+          <button id="cashFlowTab" 
+                  onclick="showTab('cashFlow')"
+                  class="tab-button active border-2 text-gray-900 flex-3 m-1 py-2.5 px-4 text-sm font-medium rounded-full transition-all duration-200">
+            Cash Flow
+          </button>
+          <button id="revenueTab" 
+                  onclick="showTab('revenue')"
+                  class="tab-button border-2 text-gray-900 flex-3 m-1 py-2.5 px-4 text-sm font-medium rounded-full transition-all duration-200">
+            Revenue  
+          </button>
+          <button id="costTab" 
+                  onclick="showTab('cost')"
+                  class="tab-button border-2 text-gray-900 flex-3 m-1 py-2.5 px-4 text-sm font-medium rounded-full transition-all duration-200">
+            Cost
+          </button>
+        </div>
       </div>
 
       <!-- Description -->
@@ -71,31 +76,21 @@
         
         <!-- Cash Flow Chart -->
         <div id="cashFlowChart" class="chart-container">
-          <h3 class="text-center text-sm font-medium text-gray-700 mb-6">
+          <h3 class="text-center text-sm font-medium text-gray-400 mb-2">
             Net Cash Flow (USD) per Year
           </h3>
+          <div class="flex items-center justify-center space-x-6 text-xs mb-4">
+            <div class="flex items-center">
+              <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+              <span>Profit</span>
+            </div>
+            <div class="flex items-center">
+              <div class="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+              <span>Loss</span>
+            </div>
+          </div>
           <div class="relative h-64 mb-6">
-            
-            <!-- Y-axis -->
-            <div class="absolute left-0 top-0 h-full w-12 flex flex-col justify-between text-xs text-gray-500">
-              <span>$50K</span>
-              <span>$25K</span>
-              <span>$12.5K</span>
-              <span class="font-semibold">0</span>
-              <span>-$12.5K</span>
-            </div>
-
-            <!-- Bars -->
-            <div class="absolute left-12 right-0 top-0 h-full border-l-2 border-b-2 border-gray-300">
-              <div id="chartBars" class="h-full flex items-end justify-between px-4"></div>
-            </div>
-
-            <!-- X-axis -->
-            <div class="absolute left-12 right-0 -bottom-6 flex justify-between text-xs text-gray-600 px-4">
-              {% for year_data in estimate.yearly_financials %}
-                <span>{{ year_data.year }}</span>
-              {% endfor %}
-            </div>
+            <canvas id="cashFlowCanvas" width="400" height="200"></canvas>
           </div>
           <p class="text-xs text-gray-500 text-center italic">
             Estimates only. More data will improve accuracy.
@@ -104,49 +99,138 @@
 
         <!-- Revenue Chart -->
         <div id="revenueChart" class="chart-container hidden">
-          <h3 class="text-center text-sm font-medium text-gray-700 mb-6">
+          <h3 class="text-center text-sm font-medium text-gray-400 mb-2">
             Revenue Breakdown (USD) per Year
           </h3>
-          <div class="h-64 mb-6 flex items-center justify-center">
-            <p class="text-gray-400">Revenue breakdown chart</p>
+          <div class="flex items-center justify-center space-x-4 text-xs mb-4">
+            <div class="flex items-center">
+              <div class="w-3 h-3 bg-green-600 rounded-full mr-1"></div>
+              <span>Agricultural Sales</span>
+            </div>
+            <div class="flex items-center">
+              <div class="w-3 h-3 bg-blue-600 rounded-full mr-1"></div>
+              <span>Ecosystem Services</span>
+            </div>
+            <div class="flex items-center">
+              <div class="w-3 h-3 bg-yellow-500 rounded-full mr-1"></div>
+              <span>Subsidies & Incentives</span>
+            </div>
           </div>
+          <div class="relative h-64 mb-6">
+            <canvas id="revenueCanvas" width="400" height="200"></canvas>
+          </div>
+          <p class="text-xs text-gray-500 text-center italic">
+            Revenue breakdown by category
+          </p>
         </div>
 
         <!-- Cost Chart -->
         <div id="costChart" class="chart-container hidden">
-          <h3 class="text-center text-sm font-medium text-gray-700 mb-6">
+          <h3 class="text-center text-sm font-medium text-gray-400 mb-2">
             Total Costs (USD) per Year
           </h3>
-          <div class="h-64 mb-6 flex items-center justify-center">
-            <p class="text-gray-400">Cost analysis chart</p>
+          <div class="flex items-center justify-center text-xs mb-4">
+            <div class="flex items-center">
+              <div class="w-3 h-3 bg-orange-600 rounded-full mr-2"></div>
+              <span>Operating Costs</span>
+            </div>
           </div>
+          <div class="relative h-64 mb-6">
+            <canvas id="costCanvas" width="400" height="200"></canvas>
+          </div>
+          <p class="text-xs text-gray-500 text-center italic">
+            Operating costs over time
+          </p>
         </div>
       </div>
     </div>
 
-    <!-- Financial Data Table -->
     <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
-      <div class="bg-primary-forest text-primary-mindaro">
-        <div class="grid grid-cols-4 gap-3 p-4 text-sm font-semibold">
-          <div>Year</div>
-          <div>Total Revenue</div>
-          <div>Total Costs</div>
-          <div>Net Cash Flow</div>
+      <!-- Cash Flow Table -->
+      <div id="cashFlowTable" class="table-container">
+        <div class="bg-primary-forest text-primary-mindaro">
+          <div class="grid grid-cols-4 gap-3 p-4 text-xs sm:text-sm font-semibold">
+            <div>Year</div>
+            <div>Total Revenue</div>
+            <div>Total Costs</div>
+            <div>Net Cash Flow</div>
+          </div>
+        </div>
+        <div class="divide-y divide-gray-100">
+          {% for year_data in estimate.yearly_financials %}
+          <div class="grid grid-cols-4 gap-3 p-4 text-xs sm:text-sm hover:bg-gray-50 transition-colors">
+            <div class="font-semibold text-gray-900">Year {{ year_data.year }}</div>
+            <div class="text-gray-700">${{ year_data.total_revenue|floatformat:0 }}</div>
+            <div class="text-gray-700">${{ year_data.total_costs|floatformat:0 }}</div>
+            <div class="font-semibold {% if year_data.net_cash_flow > '0' %}text-green-600{% else %}text-red-600{% endif %}">
+              {% if year_data.net_cash_flow > '0' %}+{% endif %}${{ year_data.net_cash_flow|floatformat:0 }}
+            </div>
+          </div>
+          {% empty %}
+          <div class="p-8 text-center text-gray-500">
+            No financial data available
+          </div>
+          {% endfor %}
         </div>
       </div>
 
-      <div class="divide-y divide-gray-100">
-        {% for year_data in estimate.yearly_financials %}
-        <div class="grid grid-cols-4 gap-3 p-4 text-sm hover:bg-gray-50 transition-colors">
-          <div class="font-semibold text-gray-900">{{ year_data.year }}</div>
-          <div class="text-gray-700">${{ year_data.total_revenue|floatformat:0 }}</div>
-          <div class="text-gray-700">${{ year_data.total_costs|floatformat:0 }}</div>
-          <div class="font-semibold {% if year_data.net_cash_flow > 0 %}text-green-600{% else %}text-red-600{% endif %}">
-            {% if year_data.net_cash_flow > 0 %}+{% endif %}${{ year_data.net_cash_flow|floatformat:0 }}
+      <!-- Revenue Table -->
+      <div id="revenueTable" class="table-container hidden">
+        <div class="bg-primary-forest text-primary-mindaro">
+          <div class="grid grid-cols-4 gap-3 p-4 text-xs sm:text-sm font-semibold">
+            <div>Year</div>
+            <div>Agricultural Sales</div>
+            <div>Ecosystem Services</div>
+            <div>Subsidies & Incentives</div>
           </div>
         </div>
-        {% endfor %}
+        <div class="divide-y divide-gray-100">
+          {% for year_data in estimate.yearly_financials %}
+          <div class="grid grid-cols-4 gap-3 p-4 text-xs sm:text-sm hover:bg-gray-50 transition-colors">
+            <div class="font-semibold text-gray-900">Year {{ year_data.year }}</div>
+            <div class="text-gray-700">${{ year_data.agricultural_sales|default:"0"|floatformat:0 }}</div>
+            <div class="text-gray-700">${{ year_data.ecosystem_services|default:"0"|floatformat:0 }}</div>
+            <div class="text-gray-700">${{ year_data.subsidies_incentives|default:"0"|floatformat:0 }}</div>
+          </div>
+          {% endfor %}
+        </div>
       </div>
+
+      <!-- Cost Table -->
+      <div id="costTable" class="table-container hidden">
+        <div class="bg-primary-forest text-primary-mindaro">
+          <div class="grid grid-cols-5 gap-2 p-4 text-xs sm:text-sm font-semibold">
+            <div>Year</div>
+            <div>Labor</div>
+            <div>Equipment</div>
+            <div>Materials</div>
+            <div>Total Costs</div>
+          </div>
+        </div>
+        <div class="divide-y divide-gray-100">
+          {% for year_data in estimate.yearly_financials %}
+          <div class="grid grid-cols-5 gap-2 p-4 text-xs sm:text-sm hover:bg-gray-50 transition-colors">
+            <div class="font-semibold text-gray-900">Year {{ year_data.year }}</div>
+            <div class="text-gray-700">${{ year_data.labor_costs|default:year_data.total_costs|floatformat:0|slice:":4" }}K</div>
+            <div class="text-gray-700">${{ year_data.equipment_costs|default:year_data.total_costs|floatformat:0|slice:":3" }}K</div>
+            <div class="text-gray-700">${{ year_data.material_costs|default:year_data.total_costs|floatformat:0|slice:":3" }}K</div>
+            <div class="font-semibold text-orange-600">${{ year_data.total_costs|floatformat:0 }}</div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex gap-4 mt-8">
+      <a href="{% url 'estimate:property_estimate' %}" 
+         class="flex-1 bg-primary-forest text-primary-mindaro text-center font-bold py-4 px-6 rounded-xl hover:bg-opacity-90 transition-all">
+        New Estimate
+      </a>
+      <button onclick="window.print()" 
+              class="flex-1 bg-gray-100 text-gray-700 font-bold py-4 px-6 rounded-xl hover:bg-gray-200 transition-all">
+        Print Report
+      </button>
     </div>
   </div>
 </div>
@@ -154,27 +238,36 @@
 <style>
 .tab-button {
   background: transparent;
-  color: #6b7280;
+  color: #1B2210;
+  font-weight: 800;
+  border: #1B2210 2px solid;
+}
+.tab-button:hover:not(.active) {
+  background: rgba(27, 34, 16, 0.05);
 }
 .tab-button.active {
   background: #1B2210;
   color: #EFFE8B;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-.chart-bar {
-  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-origin: bottom;
+.hidden {
+  display: none !important;
 }
-.chart-bar:hover {
-  opacity: 0.8;
-  transform: scaleY(1.05);
+.table-container, .chart-container {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 </style>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Injected from Django
-  const financialData = estimate.get_chart_data|safe|"[]";
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+<script>
+function showTab(tabName) {
   const tabs = {
     cashFlow: document.getElementById('cashFlowTab'),
     revenue: document.getElementById('revenueTab'),
@@ -185,51 +278,192 @@ document.addEventListener('DOMContentLoaded', function() {
     revenue: document.getElementById('revenueChart'),
     cost: document.getElementById('costChart')
   };
+  
+  const tables = {
+    cashFlow: document.getElementById('cashFlowTable'),
+    revenue: document.getElementById('revenueTable'),
+    cost: document.getElementById('costTable')
+  };
+  
+  Object.keys(charts).forEach(key => {
+    if (charts[key]) charts[key].classList.add('hidden');
+    if (tables[key]) tables[key].classList.add('hidden');
+    if (tabs[key]) tabs[key].classList.remove('active');
+  });
+  
+  if (charts[tabName]) charts[tabName].classList.remove('hidden');
+  if (tables[tabName]) tables[tabName].classList.remove('hidden');
+  if (tabs[tabName]) tabs[tabName].classList.add('active');
+}
 
-  function showTab(activeTab) {
-    Object.entries(charts).forEach(([key, chart]) => {
-      if (key === activeTab) {
-        chart.classList.remove('hidden');
-        tabs[key].classList.add('active');
-      } else {
-        chart.classList.add('hidden');
-        tabs[key].classList.remove('active');
+// Initialize charts when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  // Get the financial data from Django
+  const yearlyData = {{ estimate.yearly_financials|safe|default:"[]" }};
+  
+  if (yearlyData.length === 0) {
+    console.log('No financial data available');
+    return;
+  }
+  
+  const years = yearlyData.map(d => `Year ${d.year}`);
+  const revenues = yearlyData.map(d => parseFloat(d.total_revenue || 0));
+  const costs = yearlyData.map(d => parseFloat(d.total_costs || 0));
+  const cashFlows = yearlyData.map(d => parseFloat(d.net_cash_flow || 0));
+  const agSales = yearlyData.map(d => parseFloat(d.agricultural_sales || 0));
+  const ecoServices = yearlyData.map(d => parseFloat(d.ecosystem_services || 0));
+  const subsidies = yearlyData.map(d => parseFloat(d.subsidies_incentives || 0));
+  
+  // Cash Flow Chart
+  const cashFlowCtx = document.getElementById('cashFlowCanvas');
+  if (cashFlowCtx) {
+    new Chart(cashFlowCtx, {
+      type: 'bar',
+      data: {
+        labels: years,
+        datasets: [{
+          label: 'Net Cash Flow',
+          data: cashFlows,
+          backgroundColor: cashFlows.map(v => v >= 0 ? 'rgba(34, 197, 94, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
+          borderColor: cashFlows.map(v => v >= 0 ? 'rgb(34, 197, 94)' : 'rgb(239, 68, 68)'),
+          borderWidth: 2,
+          borderRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          title: { display: false }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(0, 0, 0, 0.05)'
+            },
+            ticks: {
+              callback: function(value) {
+                return '$' + (value/1000).toFixed(0) + 'K';
+              }
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            }
+          }
+        }
       }
     });
   }
-
-  tabs.cashFlow.addEventListener('click', () => showTab('cashFlow'));
-  tabs.revenue.addEventListener('click', () => showTab('revenue'));
-  tabs.cost.addEventListener('click', () => showTab('cost'));
-
-  function generateChartBars() {
-    const chartBars = document.getElementById('chartBars');
-    if (!chartBars || !financialData.length) return;
-
-    chartBars.innerHTML = '';
-    const maxValue = 50000;
-
-    financialData.forEach((yearData) => {
-      const netCashFlow = parseFloat(yearData.net_cash_flow) || 0;
-      const barHeight = Math.max(Math.abs(netCashFlow) / maxValue * 100, 2);
-
-      const barContainer = document.createElement('div');
-      barContainer.className = 'flex flex-col items-center flex-1 mx-1';
-
-      const bar = document.createElement('div');
-      bar.className = `chart-bar w-full ${netCashFlow >= 0 ? 'bg-green-500 rounded-t' : 'bg-red-500 rounded-b'}`;
-      bar.style.height = `${barHeight}%`;
-
-      if (netCashFlow < 0) {
-        barContainer.style.justifyContent = 'flex-end';
+  
+  // Revenue Chart (Stacked Bar)
+  const revenueCtx = document.getElementById('revenueCanvas');
+  if (revenueCtx) {
+    new Chart(revenueCtx, {
+      type: 'bar',
+      data: {
+        labels: years,
+        datasets: [
+          {
+            label: 'Agricultural Sales',
+            data: agSales,
+            backgroundColor: 'rgba(34, 197, 94, 0.8)',
+            borderRadius: 4
+          },
+          {
+            label: 'Ecosystem Services',
+            data: ecoServices,
+            backgroundColor: 'rgba(59, 130, 246, 0.8)',
+            borderRadius: 4
+          },
+          {
+            label: 'Subsidies',
+            data: subsidies,
+            backgroundColor: 'rgba(251, 191, 36, 0.8)',
+            borderRadius: 4
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        scales: {
+          x: { 
+            stacked: true,
+            grid: {
+              display: false
+            }
+          },
+          y: { 
+            stacked: true,
+            grid: {
+              color: 'rgba(0, 0, 0, 0.05)'
+            },
+            ticks: {
+              callback: function(value) {
+                return '$' + (value/1000).toFixed(0) + 'K';
+              }
+            }
+          }
+        }
       }
-
-      barContainer.appendChild(bar);
-      chartBars.appendChild(barContainer);
     });
   }
-
-  generateChartBars();
+  
+  // Cost Chart (Line)
+  const costCtx = document.getElementById('costCanvas');
+  if (costCtx) {
+    new Chart(costCtx, {
+      type: 'line',
+      data: {
+        labels: years,
+        datasets: [{
+          label: 'Operating Costs',
+          data: costs,
+          borderColor: 'rgb(251, 146, 60)',
+          backgroundColor: 'rgba(251, 146, 60, 0.1)',
+          borderWidth: 3,
+          tension: 0.4,
+          fill: true,
+          pointRadius: 4,
+          pointBackgroundColor: 'rgb(251, 146, 60)'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(0, 0, 0, 0.05)'
+            },
+            ticks: {
+              callback: function(value) {
+                return '$' + (value/1000).toFixed(0) + 'K';
+              }
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            }
+          }
+        }
+      }
+    });
+  }
 });
 </script>
 {% endblock %}
