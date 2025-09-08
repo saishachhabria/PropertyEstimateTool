@@ -1,3 +1,11 @@
+.env
 venv/
 __pycache__/
 staticfiles/
+estimate/migrations/
+*.css
+*.xml
+htmlcov/
+.coverage
+*.sqlite3
+db.sqlite3
