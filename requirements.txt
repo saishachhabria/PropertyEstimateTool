@@ -25,3 +25,5 @@ ipython==8.19.0
 django-debug-toolbar==4.2.0
 black==23.12.1
 flake8==7.0.0
+
+dj-database-url==2.1.0
