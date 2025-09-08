@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+
+{% block title %}Question {{ question_number }} - Valora Earth{% endblock %}
+
+{% block main_classes %}bg-white{% endblock %}
+
+{% block content %}
+
+<!-- Main Content with Gradient Background -->
+<div class="min-h-screen gradient-bg pattern-overlay">
+    <div class="container mx-auto px-4 py-8 max-w-md">
+        
+        <!-- Back Arrow and Progress Bar -->
+        <div class="flex items-center space-x-4 mb-8">
+            <!-- Back Button with hover effect -->
+            {% if question_number > 1 %}
+                <a href="/estimate/questionnaire/{{ inquiry.id }}/{{ question_number|add:'-1' }}/" 
+                   class="flex items-center justify-center w-8 h-8 hover:bg-black hover:bg-opacity-10 rounded-full transition-all duration-200 group">
+                    <!-- Back Arrow SVG -->
+                    <svg class="w-6 h-6 text-primary-forest group-hover:text-primary-forest transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                </a>
+            {% else %}
+                <div class="w-8 h-8"></div>
+            {% endif %}
+            
+            <!-- Progress Bar -->
+            <div class="flex-1 flex space-x-1">
+                {% for i in "123456"|make_list %}
+                <div class="flex-1 h-1 transition-all duration-300
+                    {% if question_number|stringformat:'s' >= i %}
+                        bg-primary-forest rounded-full
+                    {% else %}
+                        bg-gray-300 rounded-full opacity-60
+                    {% endif %}
+                "></div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Question Title -->
+        <h2 class="text-xl font-semibold text-primary-forest text-center mb-8 px-4 leading-relaxed">
+            {{ question_data.title }}
+        </h2>
+        
+        <!-- Form Container -->
+        <div class="bg-white border-2 border-primary-forest rounded-2xl p-4 mb-6 shadow-sm">
+            <form method="post" id="questionForm">
+                {% csrf_token %}
+                
+                <!-- Textarea -->
+                <textarea 
+                    name="response"
+                    id="responseInput"
+                    rows="12"
+                    class="w-full text-lg text-gray-900 placeholder-gray-400 border-none resize-none focus:outline-none leading-relaxed"
+                    placeholder="{{ question_data.placeholder }}"
+                    {% if question_data.required %}required{% endif %}
+                >{{ current_response|default:"" }}</textarea>
+                
+                <!-- Send Button -->
+                <!-- <div class="flex justify-end mt-2">
+                    <button 
+                        type="button"
+                        id="sendButton"
+                        onclick="submitForm()"
+                        class="w-10 h-10 bg-primary-forest rounded-xl flex items-center justify-center transition-all duration-200 opacity-30 hover:opacity-100 disabled:opacity-30"
+                        disabled
+                    >
+                        <svg class="w-5 h-5 text-primary-mindaro" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                        </svg>
+                    </button>
+                </div> -->
+            </form>
+        </div>
+        
+        <!-- Continue Button -->
+        <button 
+            type="button"
+            onclick="submitForm()"
+            id="continueButton"
+            class="w-full bg-primary-forest text-primary-mindaro font-bold py-4 px-6 rounded-xl hover:bg-opacity-90 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled
+        >
+            <span id="continueText" class="flex items-center justify-center space-x-2">
+                <span>
+                    {% if question_number >= 6 %}
+                        Complete Survey
+                    {% elif question_number >= 5 %}
+                        Last Question
+                    {% else %}
+                        Next Question
+                    {% endif %}
+                </span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+            </span>
+            <span id="continueSpinner" class="hidden">
+                <svg class="animate-spin h-5 w-5 text-primary-mindaro mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            </span>
+        </button>
+        
+        <!-- Helper Text -->
+        <p class="text-center text-sm text-primary-forest mt-4 opacity-75">
+            More information leads to better estimates.
+        </p>
+    </div>
+</div>
+
+<style>
+
+@media (min-width: 768px) {
+    .container { max-width: 500px; }
+    h2 { font-size: 1.5rem; }
+    textarea { font-size: 1.125rem; }
+}
+
+@media (min-width: 1024px) {
+    .container { max-width: 600px; }
+    h2 { font-size: 1.75rem; }
+    .bg-white.border-2 { padding: 2rem; }
+}
+
+@media (min-width: 1280px) {
+    .container { max-width: 700px; }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+
+function updateButtons() {
+    const responseInput = document.getElementById('responseInput');
+    const sendButton = document.getElementById('sendButton');
+    const continueButton = document.getElementById('continueButton');
+    const hasContent = responseInput.value.trim().length > 0;
+    
+    sendButton.disabled = !hasContent;
+    continueButton.disabled = !hasContent;
+    
+    if (hasContent) {
+        sendButton.classList.remove('opacity-30');
+        sendButton.classList.add('opacity-100');
+    } else {
+        sendButton.classList.add('opacity-30');
+        sendButton.classList.remove('opacity-100');
+    }
+}
+
+function submitForm() {
+    const responseInput = document.getElementById('responseInput');
+    if (responseInput.value.trim() === '') {
+        alert('Please enter a response before continuing.');
+        return;
+    }
+    
+    const continueText = document.getElementById('continueText');
+    const continueSpinner = document.getElementById('continueSpinner');
+    
+    continueText.classList.add('hidden');
+    continueSpinner.classList.remove('hidden');
+    
+    document.getElementById('questionForm').submit();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const responseInput = document.getElementById('responseInput');
+    
+    responseInput.addEventListener('input', updateButtons);
+    responseInput.addEventListener('paste', function() {
+        setTimeout(updateButtons, 100);
+    });
+    
+    responseInput.focus();
+    updateButtons();
+});
+</script>
+{% endblock %}

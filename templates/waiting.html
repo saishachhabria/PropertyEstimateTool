@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+
+{% block title %}Generating Your Estimate - Valora Earth{% endblock %}
+
+{% block content %}
+
+
+<!-- Processing Content -->
+<div class="gradient-bg pattern-overlay min-h-screen flex items-center justify-center px-6">
+    <div class="text-center max-w-sm">
+        
+        <!-- Processing Animation -->
+        <div class="mb-8">
+
+            <!-- Animated Circles -->
+            <div class="flex justify-center space-x-2 mb-4">
+                <div class="w-3 h-3 bg-primary-forest rounded-full animate-bounce" style="animation-delay: 0ms;"></div>
+                <div class="w-3 h-3 bg-primary-forest rounded-full animate-bounce" style="animation-delay: 150ms;"></div>
+                <div class="w-3 h-3 bg-primary-forest rounded-full animate-bounce" style="animation-delay: 300ms;"></div>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="w-full bg-primary-light border border-primary-forest rounded-full h-3 mb-4">
+                <div id="progressBar" class="bg-primary-forest h-2.5 rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
+            </div>
+            
+            <!-- Progress Text -->
+            <p id="progressText" class="text-sm font-medium text-primary-forest">
+                Starting analysis...
+            </p>
+        </div>
+        
+        <!-- Status Messages -->
+        <div class="space-y-3">
+            <h2 class="text-xl font-bold text-primary-forest">
+                We're calculating your estimated earnings
+            </h2>
+            
+            <div id="statusMessages" class="space-y-2 text-sm text-gray-700">
+                <div id="status1" class="opacity-50">
+                    <span class="inline-block w-2 h-2 bg-primary-forest rounded-full mr-2"></span>
+                    Analyzing property location and size
+                </div>
+                <div id="status2" class="opacity-30">
+                    <span class="inline-block w-2 h-2 bg-gray-400 rounded-full mr-2"></span>
+                    Evaluating regenerative agriculture potential
+                </div>
+                <div id="status3" class="opacity-30">
+                    <span class="inline-block w-2 h-2 bg-gray-400 rounded-full mr-2"></span>
+                    Calculating financial projections
+                </div>
+                <div id="status4" class="opacity-30">
+                    <span class="inline-block w-2 h-2 bg-gray-400 rounded-full mr-2"></span>
+                    Preparing your personalized report
+                </div>
+            </div>
+        </div>
+                
+        <!-- Error Message -->
+        <div id="errorMessage" class="hidden mt-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+            <div class="flex items-center">
+                <svg class="w-5 h-5 text-red-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                </svg>
+                <div>
+                    <p class="text-sm font-medium text-red-800">
+                        Something went wrong
+                    </p>
+                    <p id="errorText" class="text-xs text-red-600 mt-1">
+                        Please try again or contact support if the problem persists.
+                    </p>
+                </div>
+            </div>
+            <button onclick="window.location.href = '/estimate/'" 
+                    class="mt-3 w-full bg-red-600 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-red-700 transition-colors">
+                Start Over
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    const errorMessage = document.getElementById('errorMessage');
+    const errorText = document.getElementById('errorText');
+    
+    let progress = 0;
+    let statusStep = 1;
+    let startTime = Date.now();
+    
+    // Start the estimate generation
+    setTimeout(() => {
+        generateEstimate();
+    }, 1000);
+    
+    // Progress animation
+    const progressInterval = setInterval(() => {
+        if (progress < 90) {
+            progress += Math.random() * 10 + 5;
+            if (progress > 90) progress = 90;
+            
+            progressBar.style.width = progress + '%';
+            
+            updateStatusMessages();
+            updateProgressText();
+        }
+    }, 1000);
+    
+    function updateStatusMessages() {
+        const statusMessages = ['status1', 'status2', 'status3', 'status4'];
+        
+        statusMessages.forEach((statusId, index) => {
+            const element = document.getElementById(statusId);
+            const circle = element.querySelector('span');
+            
+            if (progress > (index + 1) * 20) {
+                element.classList.remove('opacity-30', 'opacity-50');
+                element.classList.add('opacity-100');
+                circle.classList.remove('bg-gray-400');
+                circle.classList.add('bg-primary-forest');
+            }
+        });
+    }
+    
+    function updateProgressText() {
+        if (progress < 25) {
+            progressText.textContent = 'Analyzing property details...';
+        } else if (progress < 50) {
+            progressText.textContent = 'Evaluating regenerative potential...';
+        } else if (progress < 75) {
+            progressText.textContent = 'Calculating financial projections...';
+        } else if (progress < 90) {
+            progressText.textContent = 'Finalizing your report...';
+        }
+    }
+    
+    function generateEstimate() {
+        const inquiryId = '{{ inquiry.id }}';
+        const generateUrl = `/estimate/generate/${inquiryId}/`;
+        
+        fetch(generateUrl, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'completed') {
+
+                clearInterval(progressInterval);
+                progressBar.style.width = '100%';
+                progressText.textContent = 'Complete! Redirecting to results...';
+                
+                setTimeout(() => {
+                    window.location.href = data.redirect_url;
+                }, 1500);
+                
+            } else if (data.status === 'failed') {
+                clearInterval(progressInterval);
+                showError(data.error || 'An unexpected error occurred.');
+            }
+        })
+        .catch(error => {
+            clearInterval(progressInterval);
+            showError('Network error. Please check your connection and try again.');
+            console.error('Error:', error);
+        });
+    }
+    
+    function showError(message) {
+        progressText.textContent = 'Processing failed';
+        progressBar.classList.add('bg-red-500');
+        errorText.textContent = message;
+        errorMessage.classList.remove('hidden');
+    }
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});
+</script>
+
+<style>
+@keyframes bounce {
+    0%, 20%, 53%, 80%, 100% {
+        transform: translate3d(0, 0, 0);
+    }
+    40%, 43% {
+        transform: translate3d(0, -30px, 0);
+    }
+    70% {
+        transform: translate3d(0, -15px, 0);
+    }
+    90% {
+        transform: translate3d(0, -4px, 0);
+    }
+}
+
+.animate-bounce {
+    animation: bounce 1s infinite;
+}
+</style>
+{% endblock %}

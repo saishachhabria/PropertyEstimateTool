@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Estimate Your Earnings - Valora Earth{% endblock %}
+
+{% block content %}
+<!-- Mobile-first design based on your mockup -->
+<div class="min-h-screen gradient-bg relative overflow-hidden z-6">
+    
+    <!-- Hero Section with Background Image -->
+    <div class="relative">
+        <!-- Hero Background Image Container -->
+        <div class="h-96 md:h-[32rem] relative overflow-hidden">
+            <!-- Background Image -->
+            <div 
+                class="absolute inset-0 bg-cover bg-center" 
+                style="background-image: url('{% static "images/aerial_background.png" %}');"
+            ></div>
+            <!-- Dark Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-b from-black/40 to-black/70"></div>
+            
+            <!-- Hero Content -->
+            <div class="relative z-20 h-full flex items-end">
+                <div class="w-full px-6 pb-12">
+                    <div class="max-w-md mx-auto md:max-w-2xl">
+                        <!-- Main Headline -->
+                        <h1 class="text-4xl md:text-5xl font-bold text-white leading-tight mb-8">
+                            Regenerative agriculture 
+                            <span class="text-primary-mindaro">made simple</span>
+                        </h1>
+                        
+                        <!-- Features List -->
+                        <div class="space-y-4 mb-8">
+                            <!-- Plan -->
+                            <div class="flex items-center space-x-3">
+                                <span class="text-white text-xl font-medium">Plan</span>
+                                <div class="flex items-center justify-center w-8 h-8">
+                                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M16.9383 12.2717H3.605C2.87167 12.2717 2.27167 12.8717 2.27167 13.605C2.27167 14.3384 2.87167 14.9384 3.605 14.9384H16.9383C17.6717 14.9384 18.2717 14.3384 18.2717 13.605C18.2717 12.8717 17.6717 12.2717 16.9383 12.2717ZM16.9383 6.93835H3.605C2.87167 6.93835 2.27167 7.53835 2.27167 8.27169C2.27167 9.00502 2.87167 9.60502 3.605 9.60502H16.9383C17.6717 9.60502 18.2717 9.00502 18.2717 8.27169C18.2717 7.53835 17.6717 6.93835 16.9383 6.93835ZM3.605 20.2717H11.605C12.3383 20.2717 12.9383 19.6717 12.9383 18.9384C12.9383 18.205 12.3383 17.605 11.605 17.605H3.605C2.87167 17.605 2.27167 18.205 2.27167 18.9384C2.27167 19.6717 2.87167 20.2717 3.605 20.2717ZM29.2183 15.2184L29.3383 15.3384C29.8583 15.8584 29.8583 16.6984 29.3383 17.2184L21.8983 24.6717C21.3783 25.1917 20.5383 25.1917 20.0183 24.6717L15.8983 20.5517C15.3783 20.0317 15.3783 19.1917 15.8983 18.6717L16.0183 18.5517C16.5383 18.0317 17.3783 18.0317 17.8983 18.5517L20.965 21.6184L27.3383 15.2317C27.845 14.6984 28.6983 14.6984 29.2183 15.2184Z" fill="#EFFE8B"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            
+                            <!-- Regenerate -->
+                            <div class="flex items-center space-x-3">
+                                <span class="text-white text-xl font-medium">Regenerate</span>
+                                <div class="flex items-center justify-center w-8 h-8">
+                                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <g clip-path="url(#clip0_5606_7227)">
+                                        <path d="M26.8334 4.66665V11.6667M26.8334 11.6667H19.8334M26.8334 11.6667L21.42 6.57999C20.1662 5.32549 18.6149 4.40906 16.9111 3.91622C15.2072 3.42338 13.4063 3.3702 11.6764 3.76162C9.9464 4.15305 8.34379 4.97633 7.01807 6.15464C5.69234 7.33296 4.68672 8.8279 4.09502 10.5M1.16669 23.3333V16.3333M1.16669 16.3333H8.16669M1.16669 16.3333L6.58002 21.42C7.83389 22.6745 9.38512 23.5909 11.089 24.0838C12.7928 24.5766 14.5937 24.6298 16.3237 24.2384C18.0536 23.8469 19.6563 23.0236 20.982 21.8453C22.3077 20.667 23.3133 19.1721 23.905 17.5" stroke="#EFFE8B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </g>
+                                        <defs>
+                                        <clipPath id="clip0_5606_7227">
+                                        <rect width="28" height="28" fill="white"/>
+                                        </clipPath>
+                                        </defs>
+                                    </svg>
+                                </div>
+                            </div>
+                            
+                            <!-- Prosper -->
+                            <div class="flex items-center space-x-3">
+                                <span class="text-white text-xl font-medium">Prosper</span>
+                                <div class="flex items-center justify-center w-8 h-8">
+                                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <g clip-path="url(#clip0_5606_7230)">
+                                        <path d="M26.8334 7L15.75 18.0833L9.91669 12.25L1.16669 21M26.8334 7H19.8334M26.8334 7V14" stroke="#EFFE8B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </g>
+                                        <defs>
+                                        <clipPath id="clip0_5606_7230">
+                                        <rect width="28" height="28" fill="white"/>
+                                        </clipPath>
+                                        </defs>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Form Section -->
+    <div class="relative z-10 mt-20 pb-20">
+        <div class="px-6">
+            <div class="max-w-md mx-auto">
+                
+                <!-- Arrow Icon -->
+                <div class="flex justify-center mb-6">
+                    <div class="w-9 h-9 flex items-center justify-center">
+                        <svg width="37" height="36" viewBox="0 0 37 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5.0692 9.92054C6.8034 11.188 7.39308 11.0835 10.2817 11.963C11.8755 12.4482 12.8716 13.3714 13.7372 14.8233C14.1585 15.5293 14.1496 16.8276 14.1047 17.6245C14.029 18.9774 14.4872 20.3793 15.7971 21.2361C17.356 22.2555 19.647 22.2555 21.2039 21.2307C22.5108 20.3702 22.972 18.9719 22.8962 17.619C22.8514 16.8222 22.8425 15.5238 23.2638 14.8178C24.1294 13.3659 25.1255 12.4428 26.7192 11.9576C29.6079 11.0772 30.1976 11.1826 31.9318 9.91509C33.5923 8.70031 33.663 6.53424 33.3602 5.17317C32.7366 2.36836 28.821 0.995481 26.2869 2.84355C25.7431 3.2406 25.2002 3.76032 25 4.35726C24.6673 5.34853 24.8257 6.4143 24.7201 7.44373C24.5896 8.72121 23.724 10.1897 22.5466 10.9393C21.3692 11.6888 20.0154 12.0913 18.4567 12.0913C16.898 12.0913 15.6078 11.6807 14.4534 10.9456C13.276 10.1951 12.4104 8.72757 12.2799 7.45009C12.1743 6.42066 12.3327 5.35489 12 4.36362C11.7998 3.76667 11.2569 3.24605 10.7131 2.84991C8.179 1.00184 4.26336 2.37472 3.63981 5.17953C3.337 6.54059 3.40772 8.70667 5.06821 9.92054L5.0692 9.92054Z" fill="#C1CB8B"/>
+                            <path d="M5.0692 21.9205C6.8034 23.188 7.39308 23.0835 10.2817 23.963C11.8755 24.4482 12.8716 25.3714 13.7372 26.8233C14.1585 27.5293 14.1496 28.8276 14.1047 29.6245C14.029 30.9774 14.4872 32.3793 15.7971 33.2361C17.356 34.2555 19.647 34.2555 21.2039 33.2307C22.5108 32.3702 22.972 30.9719 22.8962 29.619C22.8514 28.8222 22.8425 27.5238 23.2638 26.8178C24.1294 25.3659 25.1255 24.4428 26.7192 23.9576C29.6079 23.0772 30.1976 23.1826 31.9318 21.9151C33.5923 20.7003 33.663 18.5342 33.3602 17.1732C32.7366 14.3684 28.821 12.9955 26.2869 14.8435C25.7431 15.2406 25.2002 15.7603 25 16.3573C24.6673 17.3485 24.8257 18.4143 24.7201 19.4437C24.5896 20.7212 23.724 22.1897 22.5466 22.9393C21.3692 23.6888 20.0154 24.0913 18.4567 24.0913C16.898 24.0913 15.6078 23.6807 14.4534 22.9456C13.276 22.1951 12.4104 20.7276 12.2799 19.4501C12.1743 18.4207 12.3327 17.3549 12 16.3636C11.7998 15.7667 11.2569 15.2461 10.7131 14.8499C8.179 13.0018 4.26336 14.3747 3.63981 17.1795C3.337 18.5406 3.40772 20.7067 5.06821 21.9205L5.0692 21.9205Z" fill="#C1CB8B"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <!-- Form Card -->
+                <div class="bg-white rounded-2xl shadow-xl border-2 margin-2 border-primary-forest p-6">
+                    <h2 class="text-xl font-bold text-center text-gray-900 mb-6">
+                        Estimate Your Earnings
+                    </h2>
+                    
+                    <!-- Form -->
+                    <form method="post" id="estimateForm" class="space-y-6">
+                        {% csrf_token %}
+                        
+                        <!-- Land Plot Size Field -->
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-900">
+                                {{ form.lot_size.label }}
+                            </label>
+                            
+                            <!-- Number input with unit selector -->
+                            <div class="flex bg-gray-100 rounded-lg overflow-hidden">
+                                <div class="flex-1">
+                                    <input 
+                                        type="number" 
+                                        name="{{ form.lot_size.html_name }}" 
+                                        id="{{ form.lot_size.id_for_label }}"
+                                        placeholder="24"
+                                        step="0.01"
+                                        min="0.01"
+                                        class="w-full px-4 py-3 bg-transparent border-none focus:outline-none focus:ring-0"
+                                        value="{% if form.lot_size.value %}{{ form.lot_size.value }}{% endif %}"
+                                    />
+                                </div>
+                                <div class="flex items-center px-3 bg-gray-100 border-l">
+                                    <select name="{{ form.unit.html_name }}" class="bg-transparent text-sm border-none focus:outline-none">
+                                        {% for value, label in form.unit.field.choices %}
+                                        <option value="{{ value }}" {% if form.unit.value == value %}selected{% endif %}>{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <svg class="w-4 h-4 ml-1 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            
+                            <!-- Field Errors -->
+                            {% if form.lot_size.errors %}
+                                <div class="text-red-600 text-sm">
+                                    {{ form.lot_size.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Address Field -->
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-900">
+                                {{ form.address.label }}
+                            </label>
+                            <div class="relative">
+                                <!-- Search Icon -->
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                                <input 
+                                    type="text" 
+                                    name="{{ form.address.html_name }}" 
+                                    id="{{ form.address.id_for_label }}"
+                                    placeholder="São José do Rio Preto, Brazil"
+                                    class="w-full pl-10 pr-4 py-3 bg-gray-100 rounded-lg border-none focus:bg-white focus:ring-2 focus:ring-green-500 transition-all"
+                                    value="{% if form.address.value %}{{ form.address.value }}{% endif %}"
+                                />
+                            </div>
+                            
+                            <!-- Field Errors -->
+                            {% if form.address.errors %}
+                                <div class="text-red-600 text-sm">
+                                    {{ form.address.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <button 
+                            type="submit" 
+                            class="w-full bg-primary-forest text-primary-mindaro font-bold py-4 px-6 rounded-lg hover:bg-green-800 transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-opacity-50"
+                            id="submitBtn"
+                        >
+                            <span id="submitText">Start Estimate</span>
+                            <div id="submitSpinner" class="loading-spinner mx-auto hidden"></div>
+                        </button>
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('estimateForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const submitText = document.getElementById('submitText');
+    const submitSpinner = document.getElementById('submitSpinner');
+    
+    form.addEventListener('submit', function(e) {
+    
+        submitBtn.disabled = true;
+        submitText.classList.add('hidden');
+        submitSpinner.classList.remove('hidden');
+        
+        setTimeout(() => {
+            if (submitBtn.disabled) {
+                submitSpinner.classList.add('hidden');
+                submitText.textContent = 'Analyzing your property...';
+                submitText.classList.remove('hidden');
+            }
+        }, 2000);
+    });
+    
+    // Client-side validation
+    const addressField = document.getElementById('{{ form.address.id_for_label }}');
+    const lotSizeField = document.getElementById('{{ form.lot_size.id_for_label }}');
+    
+    addressField.addEventListener('blur', function() {
+        if (this.value.trim().length < 5) {
+            this.classList.add('ring-2', 'ring-red-500', 'bg-red-50');
+        } else {
+            this.classList.remove('ring-red-500', 'bg-red-50');
+        }
+    });
+    
+    lotSizeField.addEventListener('blur', function() {
+        const value = parseFloat(this.value);
+        if (isNaN(value) || value <= 0) {
+            this.classList.add('ring-2', 'ring-red-500', 'bg-red-50');
+        } else {
+            this.classList.remove('ring-red-500', 'bg-red-50');
+        }
+    });
+});
+</script>
+{% endblock %}
